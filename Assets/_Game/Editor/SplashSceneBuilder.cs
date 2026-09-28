@@ -22,6 +22,12 @@ namespace PixelAdventure.EditorTools
         [MenuItem("Pixel Adventure/Build Splash Scene")]
         public static void Build()
         {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                EditorUtility.DisplayDialog("Pixel Adventure",
+                    "Stop Play mode first (click the ▶ button so it is no longer blue), then run Build Splash Scene again.", "OK");
+                return;
+            }
             if (!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
 
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
