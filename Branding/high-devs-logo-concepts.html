@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>High Devs Logo</title>
+<style>
+  :root { --bg:#07060c; --fg:#e8e6f0; --muted:#8a86a0; --card:#110f1a; --line:#24203a; --accent:#ffb000; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:15px/1.5 system-ui, sans-serif; padding:24px 16px 48px; }
+  h1 { font-size:20px; margin:0 0 4px; }
+  p.sub { color:var(--muted); margin:0 0 24px; }
+  .grid { display:grid; gap:24px; max-width:1000px; margin:0 auto; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px; }
+  .card h2 { font-size:16px; margin:0 0 2px; }
+  .card p { margin:0 0 10px; color:var(--muted); font-size:14px; }
+  canvas { width:100%; aspect-ratio:16/9; display:block; border-radius:8px; image-rendering:pixelated; cursor:pointer; }
+  button { margin-top:10px; background:var(--accent); color:#1a1000; border:0; border-radius:8px; padding:8px 14px; font-weight:600; cursor:pointer; }
+  header { max-width:1000px; margin:0 auto; }
+</style>
+</head>
+<body>
+<header>
+  <h1>High Devs — logo concepts</h1>
+  <p class="sub">Each plays as the game's loading intro (16:9 landscape). Click a canvas or Replay to watch again.</p>
+</header>
+<div class="grid" id="grid"></div>
+
+<script>
+const W = 160, H = 90;
+
+const FONT = {
+  H:["10001","10001","10001","11111","10001","10001","10001"],
+  I:["11111","00100","00100","00100","00100","00100","11111"],
+  G:["01110","10001","10000","10111","10001","10001","01111"],
+  D:["11110","10001","10001","10001","10001","10001","11110"],
+  E:["11111","10000","10000","11110","10000","10000","11111"],
+  V:["10001","10001","10001","10001","10001","01010","00100"],
+  S:["01111","10000","10000","01110","00001","00001","11110"],
+};
+
+function textWidth(str, scale) {
+  let w = 0;
+  for (const ch of str) w += ch === " " ? 4 * scale : 6 * scale;
+  return w - scale;
+}
+
+// Calls put(x, y, color) for each lit pixel. color(row, charIndex) picks the color.
+function drawText(put, str, ox, oy, scale, color) {
+  let cx = ox;
+  [...str].forEach((ch, i) => {
+    if (ch === " ") { cx += 4 * scale; return; }
+    const g = FONT[ch];
+    for (let r = 0; r < 7; r++)
+      for (let c = 0; c < 5; c++)
+        if (g[r][c] === "1")
+          for (let dy = 0; dy < scale; dy++)
+            for (let dx = 0; dx < scale; dx++)
+              put(cx + c * scale + dx, oy + r * scale + dy, color(r * scale + dy, i));
+    cx += 6 * scale;
+  });
+}
+
+function hexToRgb(h) {
+  h = h.replace("#", "");
+  if (h.length === 3) h = [...h].map(c => c + c).join("");
+  const n = parseInt(h, 16);
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+function mix(a, b, t) {
+  const A = hexToRgb(a), B = hexToRgb(b);
+  return `rgb(${A.map((v, i) => Math.round(v + (B[i] - v) * t)).join(",")})`;
+}
+function bands(stops, row, rows) {
+  return stops[Math.min(stops.length - 1, Math.floor((row / rows) * stops.length))];
+}
+
+function makeCanvasBuffer() {
+  const map = new Map();
+  const put = (x, y, c) => {
+    x = Math.round(x); y = Math.round(y);
+    if (x >= 0 && x < W && y >= 0 && y < H) map.set(x + "," + y, { x, y, c });
+  };
+  return { map, put };
+}
+
+// ---------- Concept 1: Summit ----------
+function summit() {
+  const { map, put } = makeCanvasBuffer();
+  // retro striped sun
+  const sx = 80, sy = 30, r = 16;
+  for (let y = sy - r; y <= sy + r; y++)
+    for (let x = sx - r; x <= sx + r; x++) {
+      const d = (x - sx) ** 2 + (y - sy) ** 2;
+      if (d > r * r) continue;
+      if (y > sy + 1 && (y - sy) % 3 === 0) continue;
+      put(x, y, bands(["#ffe066", "#ffc23d", "#ff9b2f", "#ff6a3a"], y - (sy - r), 2 * r + 1));
+    }
+  // back mountain
+  for (let y = 34; y <= 54; y++) {
+    const half = (y - 34) * 1.4;
+    for (let x = 44 - half; x <= 44 + half; x++) put(x, y, "#231842");
+  }
+  for (let y = 36; y <= 54; y++) {
+    const half = (y - 36) * 1.4;
+    for (let x = 120 - half; x <= 120 + half; x++) put(x, y, "#231842");
+  }
+  // main peak
+  const peak = 18;
+  for (let y = peak; y <= 54; y++) {
+    const half = (y - peak) * 1.3;
+    for (let x = Math.round(80 - half); x <= Math.round(80 + half); x++) {
+      const snow = y < peak + 6 + ((x % 3 === 0) ? 1 : 0) - ((x % 4 === 1) ? 1 : 0);
+      const shade = x > 80;
+      put(x, y, snow ? (shade ? "#b9b4e0" : "#f0eeff") : (shade ? "#2e2160" : "#3f2d7d"));
+    }
+  }
+  // wordmark
+  const str = "HIGH DEVS", sc = 2, tw = textWidth(str, sc), tx = Math.round((W - tw) / 2), ty = 59;
+  drawText(put, str, tx + 1, ty + 1, sc, () => "#050309");
+  drawText(put, str, tx, ty, sc, row => bands(["#ffe066", "#ffc23d", "#ff9b2f", "#ff6a3a"], row, 14));
+  // underline with notches
+  for (let x = tx; x < tx + tw; x++) if ((x - tx) % 8 !== 7) put(x, ty + 17, "#ff9b2f");
+  return { bg: "#120c24", map, scanlines: false };
+}
+
+// ---------- Concept 2: Blade ----------
+function blade() {
+  const { map, put } = makeCanvasBuffer();
+  const cx = 80;
+  // tip
+  put(cx, 9, "#ffffff");
+  for (let x = cx - 1; x <= cx + 1; x++) put(x, 10, "#dfe6ef");
+  // blade
+  for (let y = 11; y <= 57; y++) {
+    put(cx - 2, y, "#8c99ab");
+    put(cx - 1, y, "#cfd8e3");
+    put(cx, y, "#ffffff");
+    put(cx + 1, y, "#cfd8e3");
+    put(cx + 2, y, "#8c99ab");
+  }
+  for (let y = 16; y <= 54; y++) put(cx, y, y % 2 ? "#e6ecf4" : "#ffffff"); // fuller
+  // crossguard
+  for (let x = cx - 12; x <= cx + 12; x++) { put(x, 58, "#ffd65a"); put(x, 59, "#c9a227"); put(x, 60, "#8a6a12"); }
+  put(cx - 13, 59, "#c9a227"); put(cx + 13, 59, "#c9a227");
+  put(cx, 59, "#e8455a"); // gem
+  // grip
+  for (let y = 61; y <= 71; y++)
+    for (let x = cx - 1; x <= cx + 1; x++) put(x, y, (y + x) % 3 === 0 ? "#3d220f" : "#6b3e1f");
+  // pommel
+  for (let x = cx - 2; x <= cx + 2; x++) { put(x, 72, "#ffd65a"); put(x, 73, "#c9a227"); }
+  put(cx - 1, 74, "#8a6a12"); put(cx, 74, "#8a6a12"); put(cx + 1, 74, "#8a6a12");
+  // wordmark split by the sword
+  const sc = 2, wHigh = textWidth("HIGH", sc), ty = 34;
+  const hx = cx - 7 - wHigh, dx = cx + 7;
+  drawText(put, "HIGH", hx + 1, ty + 1, sc, () => "#000000");
+  drawText(put, "DEVS", dx + 1, ty + 1, sc, () => "#000000");
+  drawText(put, "HIGH", hx, ty, sc, row => bands(["#ffffff", "#dfe6ef", "#aab6c6"], row, 14));
+  drawText(put, "DEVS", dx, ty, sc, row => bands(["#ffe27a", "#ffc93d", "#c9a227"], row, 14));
+  // sparkles
+  const spark = (x, y) => { put(x, y, "#ffffff"); put(x - 1, y, "#9fb3ff"); put(x + 1, y, "#9fb3ff"); put(x, y - 1, "#9fb3ff"); put(x, y + 1, "#9fb3ff"); };
+  spark(cx + 6, 13); spark(cx - 24, 26); spark(cx + 32, 56);
+  return { bg: "#0b0f17", map, scanlines: false };
+}
+
+// ---------- Concept 3: Arcade ----------
+function arcade() {
+  const { map, put } = makeCanvasBuffer();
+  // synth grid floor
+  const horizon = 70;
+  for (let y = horizon; y < H; y++) {
+    const k = (y - horizon) / (H - horizon);
+    if ([0, 2, 5, 9, 14, 19].includes(y - horizon)) for (let x = 0; x < W; x++) put(x, y, mix("#2a0845", "#b0209a", k));
+  }
+  for (let i = -10; i <= 10; i++) {
+    for (let s = 0; s <= 400; s++) {
+      const t = s / 400, y = horizon + t * (H - horizon);
+      put(80 + i * 5 + i * 20 * t, y, mix("#2a0845", "#b0209a", t));
+    }
+  }
+  const sc = 3, tw = textWidth("HIGH", sc), tx = 36;
+  const layers = (str, y, ext, front) => {
+    for (let d = 3; d >= 1; d--) drawText(put, str, tx + d, y + d, sc, () => ext);
+    drawText(put, str, tx, y, sc, row => bands(front, row, 21));
+  };
+  layers("HIGH", 12, "#0b4f6a", ["#d8ffff", "#6ff6ff", "#28d4f0", "#1aa6d8"]);
+  layers("DEVS", 40, "#6a0b58", ["#ffe0fb", "#ff7ae6", "#ff3fd0", "#c21ea6"]);
+  // double up-arrow
+  const arrow = (ax, ay, c1, c2) => {
+    for (let k = 0; k < 7; k++) for (let x = ax - k; x <= ax + k; x++) put(x, ay + k, k < 3 ? c1 : c2);
+  };
+  arrow(tx + tw + 14, 14, "#fff3a0", "#ffe14d");
+  arrow(tx + tw + 14, 24, "#ffd24d", "#ffb000");
+  // stars
+  [[12, 8], [148, 12], [140, 40], [20, 44], [128, 60], [8, 62]].forEach(([x, y]) => put(x, y, "#ffffff"));
+  return { bg: "#0a0014", map, scanlines: true };
+}
+
+// ---------- Player ----------
+function setup(title, desc, build) {
+  const card = document.createElement("div");
+  card.className = "card";
+  card.innerHTML = `<h2>${title}</h2><p>${desc}</p>`;
+  const canvas = document.createElement("canvas");
+  const btn = document.createElement("button");
+  btn.textContent = "Replay";
+  card.append(canvas, btn);
+  document.getElementById("grid").append(card);
+
+  const S = 6;
+  canvas.width = W * S; canvas.height = H * S;
+  const ctx = canvas.getContext("2d");
+  ctx.imageSmoothingEnabled = false;
+  const scene = build();
+  const pixels = [...scene.map.values()].map(p => ({ ...p, delay: Math.random() * 0.7 + (p.x / W) * 0.5 }));
+  let start = 0, raf = 0;
+
+  function frame(now) {
+    const t = (now - start) / 1000;
+    ctx.fillStyle = scene.bg;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    const fade = Math.min(1, Math.max(0, (3.6 - t) / 0.01)); // stays visible
+    const shineT = t - 1.5, band = shineT / 0.7 * 220 - 30;
+    for (const p of pixels) {
+      if (t < p.delay) continue;
+      const pop = Math.min(1, (t - p.delay) / 0.12);
+      let c = p.c;
+      if (pop < 1) c = mix(p.c.startsWith("#") ? p.c : "#ffffff", "#ffffff", 1 - pop);
+      if (shineT > 0 && shineT < 0.8) {
+        const d = Math.abs(p.x + p.y * 0.6 - band);
+        if (d < 5 && p.c.startsWith("#")) c = mix(p.c, "#ffffff", 0.75 * (1 - d / 5));
+      }
+      ctx.fillStyle = c;
+      ctx.fillRect(p.x * S, p.y * S, S, S);
+    }
+    if (scene.scanlines) {
+      ctx.fillStyle = "rgba(0,0,0,0.28)";
+      for (let y = 0; y < canvas.height; y += 4) ctx.fillRect(0, y, canvas.width, 2);
+    }
+    if (t < 2.6) raf = requestAnimationFrame(frame);
+  }
+  function play() { cancelAnimationFrame(raf); start = performance.now(); raf = requestAnimationFrame(frame); }
+  btn.onclick = play; canvas.onclick = play;
+  play();
+}
+
+setup("1 · Summit", "Striped retro sun behind a snowy pixel peak — “High” as in reaching the top. Warm gold wordmark.", summit);
+setup("2 · Blade", "A knight's sword splits HIGH | DEVS. Steel + gold, ties straight into the game's fantasy theme.", blade);
+setup("3 · Arcade", "Chunky 3D neon letters, double up-arrow, synthwave grid and CRT scanlines. Loud, classic arcade.", arcade);
+</script>
+</body>
+</html>
