@@ -13,7 +13,7 @@ namespace PixelAdventure.Splash
     public class SplashIntro : MonoBehaviour
     {
         [SerializeField] RawImage target;
-        [SerializeField] string nextScene = "SampleScene";
+        [SerializeField] string nextScene = "MainMenu";
         [SerializeField, Range(2, 8)] int pixelScale = 4;
         [SerializeField] float shineStart = 1.5f;
         [SerializeField] float shineDuration = 0.7f;

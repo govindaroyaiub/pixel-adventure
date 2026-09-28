@@ -1,6 +1,7 @@
-using System;
 using System.Collections.Generic;
+using PixelAdventure.UI;
 using UnityEngine;
+using static PixelAdventure.UI.PixelFont;
 
 namespace PixelAdventure.Splash
 {
@@ -22,17 +23,6 @@ namespace PixelAdventure.Splash
         public const int Height = 90;
 
         public static readonly Color32 Background = Hex("#0a0014");
-
-        static readonly Dictionary<char, string[]> Font = new Dictionary<char, string[]>
-        {
-            ['H'] = new[] { "10001", "10001", "10001", "11111", "10001", "10001", "10001" },
-            ['I'] = new[] { "11111", "00100", "00100", "00100", "00100", "00100", "11111" },
-            ['G'] = new[] { "01110", "10001", "10000", "10111", "10001", "10001", "01111" },
-            ['D'] = new[] { "11110", "10001", "10001", "10001", "10001", "10001", "11110" },
-            ['E'] = new[] { "11111", "10000", "10000", "11110", "10000", "10000", "11111" },
-            ['V'] = new[] { "10001", "10001", "10001", "10001", "10001", "01010", "00100" },
-            ['S'] = new[] { "01111", "10000", "10000", "01110", "00001", "00001", "11110" },
-        };
 
         public static List<LogoPixel> Build(int seed = 1234)
         {
@@ -68,8 +58,8 @@ namespace PixelAdventure.Splash
 
             void Layers(string str, int y, Color32 extrude, Color32[] front)
             {
-                for (int d = 3; d >= 1; d--) DrawText(Put, str, tx + d, y + d, sc, _ => extrude);
-                DrawText(Put, str, tx, y, sc, row => Bands(front, row, 7 * sc));
+                for (int d = 3; d >= 1; d--) Draw((px, py, c) => Put(px, py, c), str, tx + d, y + d, sc, _ => extrude);
+                Draw((px, py, c) => Put(px, py, c), str, tx, y, sc, row => Bands(front, row, GlyphHeight * sc));
             }
 
             Layers("HIGH", 12, Hex("#0b4f6a"), new[] { Hex("#d8ffff"), Hex("#6ff6ff"), Hex("#28d4f0"), Hex("#1aa6d8") });
@@ -105,41 +95,6 @@ namespace PixelAdventure.Splash
                             Delay = (float)rng.NextDouble() * 0.7f + (float)x / Width * 0.5f,
                         });
             return pixels;
-        }
-
-        public static int TextWidth(string str, int scale)
-        {
-            int w = 0;
-            foreach (char ch in str) w += ch == ' ' ? 4 * scale : 6 * scale;
-            return w - scale;
-        }
-
-        static void DrawText(Action<float, float, Color32> put, string str, int ox, int oy, int scale, Func<int, Color32> color)
-        {
-            int cx = ox;
-            foreach (char ch in str)
-            {
-                if (ch == ' ') { cx += 4 * scale; continue; }
-                string[] g = Font[ch];
-                for (int r = 0; r < 7; r++)
-                    for (int c = 0; c < 5; c++)
-                        if (g[r][c] == '1')
-                            for (int dy = 0; dy < scale; dy++)
-                                for (int dx = 0; dx < scale; dx++)
-                                    put(cx + c * scale + dx, oy + r * scale + dy, color(r * scale + dy));
-                cx += 6 * scale;
-            }
-        }
-
-        static Color32 Bands(Color32[] stops, int row, int rows)
-        {
-            return stops[Mathf.Min(stops.Length - 1, Mathf.FloorToInt((float)row / rows * stops.Length))];
-        }
-
-        static Color32 Hex(string hex)
-        {
-            ColorUtility.TryParseHtmlString(hex, out Color c);
-            return c;
         }
     }
 }
