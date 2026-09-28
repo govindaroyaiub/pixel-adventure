@@ -11,7 +11,8 @@ namespace PixelAdventure.EditorTools
 {
     /// <summary>
     /// Pixel Adventure → Build Splash Scene: generates the High Devs intro scene,
-    /// puts it first in Build Settings and applies basic player settings.
+    /// puts it first in Build Settings and applies basic player settings
+    /// (Unity splash on, black background, so it leads into the High Devs intro).
     /// Safe to run again; it overwrites the generated scene.
     /// </summary>
     public static class SplashSceneBuilder
@@ -76,7 +77,12 @@ namespace PixelAdventure.EditorTools
 
             PlayerSettings.companyName = "High Devs";
             PlayerSettings.productName = "Pixel Adventure";
-            PlayerSettings.SplashScreen.show = false;
+            // Unity's "Made with Unity" splash plays first, then our High Devs scene.
+            PlayerSettings.SplashScreen.show = true;
+            PlayerSettings.SplashScreen.showUnityLogo = true;
+            PlayerSettings.SplashScreen.unityLogoStyle = PlayerSettings.SplashScreen.UnityLogoStyle.LightOnDark;
+            PlayerSettings.SplashScreen.backgroundColor = Color.black;
+            PlayerSettings.SplashScreen.drawMode = PlayerSettings.SplashScreen.DrawMode.UnityLogoBelow;
             PlayerSettings.defaultInterfaceOrientation = UIOrientation.AutoRotation;
             PlayerSettings.allowedAutorotateToPortrait = false;
             PlayerSettings.allowedAutorotateToPortraitUpsideDown = false;
