@@ -16,6 +16,7 @@ namespace PixelAdventure.EditorTools
         public const string SceneDir = "Assets/_Game/Scenes";
         public const string SplashPath = SceneDir + "/Splash.unity";
         public const string MainMenuPath = SceneDir + "/MainMenu.unity";
+        public const string Stage1Path = SceneDir + "/Stage1-1.unity";
 
         /// <summary>False (with a popup) if scenes can't be built right now.</summary>
         public static bool CanBuild()
@@ -81,11 +82,11 @@ namespace PixelAdventure.EditorTools
             EditorSceneManager.SaveScene(scene, path);
         }
 
-        /// <summary>Build order: Splash, MainMenu, then every other scene already listed.</summary>
+        /// <summary>Build order: Splash, MainMenu, Stage 1-1, then every other scene already listed.</summary>
         public static void ApplyBuildOrder()
         {
             var ordered = new List<EditorBuildSettingsScene>();
-            foreach (string path in new[] { SplashPath, MainMenuPath })
+            foreach (string path in new[] { SplashPath, MainMenuPath, Stage1Path })
                 if (File.Exists(path)) ordered.Add(new EditorBuildSettingsScene(path, true));
             ordered.AddRange(EditorBuildSettings.scenes.Where(s => ordered.All(o => o.path != s.path)));
             if (ordered.All(s => s.path != "Assets/Scenes/SampleScene.unity") && File.Exists("Assets/Scenes/SampleScene.unity"))

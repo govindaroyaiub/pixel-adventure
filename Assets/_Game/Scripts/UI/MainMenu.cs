@@ -15,7 +15,7 @@ namespace PixelAdventure.UI
         [SerializeField] RawImage playLabel;
         [SerializeField] Button exitButton;
         [SerializeField] RawImage exitLabel;
-        [SerializeField] string gameScene = "SampleScene";
+        [SerializeField] string gameScene = "Stage1-1";
         [SerializeField] float titlePixelSize = 12f;
         [SerializeField] float labelPixelSize = 8f;
 

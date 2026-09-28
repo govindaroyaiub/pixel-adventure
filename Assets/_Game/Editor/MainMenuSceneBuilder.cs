@@ -25,8 +25,10 @@ namespace PixelAdventure.EditorTools
         {
             if (!CanBuild()) return;
             MusicGenerator.Generate();
+            PlaceholderArt.GenerateAll();
             SplashSceneBuilder.CreateScene();
             CreateScene();
+            Stage1SceneBuilder.CreateScene();
             ApplyBuildOrder();
             SplashSceneBuilder.ApplyPlayerSettings();
             EditorSceneManager.OpenScene(SplashPath);
@@ -77,6 +79,7 @@ namespace PixelAdventure.EditorTools
             so.FindProperty("playLabel").objectReferenceValue = playLabel;
             so.FindProperty("exitButton").objectReferenceValue = exitButton;
             so.FindProperty("exitLabel").objectReferenceValue = exitLabel;
+            so.FindProperty("gameScene").stringValue = "Stage1-1";
             so.ApplyModifiedPropertiesWithoutUndo();
 
             var clip = AssetDatabase.LoadAssetAtPath<AudioClip>(MusicGenerator.MenuThemePath);
