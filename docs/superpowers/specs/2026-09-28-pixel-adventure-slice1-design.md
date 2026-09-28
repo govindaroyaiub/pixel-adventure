@@ -101,7 +101,15 @@ Rules:
 - Hit-pause (~50 ms time freeze) when the Knight's hits land.
 - Aiming rule for future classes: basic attacks always use facing direction; individual skills may auto-target.
 
-### 5.5 M1 test room
+### 5.5 Animation
+
+- Every action has its own animation, driven by an Animator state machine: Idle, Run, Jump, Fall, Land, Roll, Attack1/2/3, ShieldBash (wind-up → dash → impact), HolySlam (crouch → leap → slam → recover), Hurt, Death. Enemies and boss follow the same pattern in M2.
+- Gameplay code sets Animator parameters/triggers; it never waits on animation clips for logic.
+- Each attack/skill has data-driven phases (wind-up, active, recovery). Hitboxes are enabled only during the active phase, so damage matches the visible swing.
+- Placeholder stage: animations are procedural on colored shapes (squash/stretch on land, spin on roll, lean and sword-shaped hitbox flash on swing) so every action is readable before real art.
+- Real art later: a free pixel sprite sheet with matching animations replaces the placeholders without gameplay code changes.
+
+### 5.6 M1 test room
 
 - Flat ground, two platforms, walls at both ends.
 - 3 training dummies (Health + Hurtbox, regenerate after death) to verify combo, bash knockback/stun and slam radius.
