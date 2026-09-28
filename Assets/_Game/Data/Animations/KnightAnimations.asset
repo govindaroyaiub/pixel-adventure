@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec159474660894245bd7d8fda5cf3783, type: 3}
+  m_Name: KnightAnimations
+  m_EditorClassIdentifier: Assembly-CSharp::PixelAdventure.Anim.SpriteAnimationSet
+  frameWidth: 96
+  frameHeight: 84
+  pivot: {x: 0.49, y: 0.488}
+  pixelsPerUnit: 24
+  clips:
+  - name: Idle
+    texture: {fileID: 2800000, guid: b658dc590163f2348a9e7e16910bbb1f, type: 3}
+    fps: 8
+    loop: 1
+  - name: Run
+    texture: {fileID: 2800000, guid: 0cb74ad35b6bcb94ba1052d02bb48317, type: 3}
+    fps: 12
+    loop: 1
+  - name: Jump
+    texture: {fileID: 2800000, guid: 09101c4b997685741b98ac4fe8f11c53, type: 3}
+    fps: 10
+    loop: 0
+  - name: Attack1
+    texture: {fileID: 2800000, guid: c9da8d2336fccb244bfce268c15a0b22, type: 3}
+    fps: 16
+    loop: 0
+  - name: Attack2
+    texture: {fileID: 2800000, guid: 212a90be37ffca045b200ee8c026763c, type: 3}
+    fps: 16
+    loop: 0
+  - name: Attack3
+    texture: {fileID: 2800000, guid: 90ce6567cde9d7e4d9f7cac4c2c322d8, type: 3}
+    fps: 16
+    loop: 0
+  - name: Defend
+    texture: {fileID: 2800000, guid: 035f503a34f431748b17ec371ffddadd, type: 3}
+    fps: 12
+    loop: 0
+  - name: Hurt
+    texture: {fileID: 2800000, guid: 6bee5e0f0b11e214882761d2b2eb5e11, type: 3}
+    fps: 14
+    loop: 0
+  - name: Death
+    texture: {fileID: 2800000, guid: 26d5ed2379e6caa4baf6587fde6ccb9a, type: 3}
+    fps: 10
+    loop: 0

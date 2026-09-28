@@ -48,6 +48,12 @@ namespace PixelAdventure.Player
             rb = GetComponent<Rigidbody2D>();
             box = GetComponent<BoxCollider2D>();
             health = GetComponent<Health>();
+            if (data == null || input == null)
+            {
+                Debug.LogError("PlayerMotor: hero data or input is missing. Run Pixel Adventure → Build Stage 1-1.", this);
+                enabled = false;
+                return;
+            }
             rb.gravityScale = 0f;
             rb.freezeRotation = true;
             rb.interpolation = RigidbodyInterpolation2D.Interpolate;

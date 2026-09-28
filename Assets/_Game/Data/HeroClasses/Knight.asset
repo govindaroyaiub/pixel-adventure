@@ -1,0 +1,80 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b87ed5fb84ede14aa0ab4a99744bc1f, type: 3}
+  m_Name: Knight
+  m_EditorClassIdentifier: Assembly-CSharp::PixelAdventure.Player.HeroClassData
+  id: knight
+  displayName: Knight
+  unlockedByDefault: 1
+  animations: {fileID: 11400000, guid: bda3819ccc405524283ee9202fe3a7da, type: 2}
+  maxHp: 100
+  moveSpeed: 5
+  jumpVelocity: 15
+  gravity: 40
+  fallGravityMultiplier: 1.6
+  maxFallSpeed: 22
+  coyoteTime: 0.1
+  jumpBuffer: 0.1
+  rollSpeed: 9
+  rollDuration: 0.4
+  rollCooldown: 1
+  combo:
+  - animation: Attack1
+    damage: 10
+    windup: 0.08
+    active: 0.1
+    recovery: 0.2
+    hitOffset: {x: 0.8, y: 0.75}
+    hitSize: {x: 1.4, y: 1.2}
+    knockback: {x: 3, y: 1}
+    lunge: 1.5
+  - animation: Attack2
+    damage: 10
+    windup: 0.06
+    active: 0.1
+    recovery: 0.2
+    hitOffset: {x: 0.8, y: 0.75}
+    hitSize: {x: 1.4, y: 1.2}
+    knockback: {x: 3, y: 1}
+    lunge: 1.5
+  - animation: Attack3
+    damage: 15
+    windup: 0.12
+    active: 0.12
+    recovery: 0.3
+    hitOffset: {x: 0.9, y: 0.8}
+    hitSize: {x: 1.7, y: 1.4}
+    knockback: {x: 7, y: 3}
+    lunge: 2.5
+  comboResetTime: 0.6
+  bash:
+    damage: 8
+    cooldown: 5
+    windup: 0.1
+    dashTime: 0.25
+    dashSpeed: 10
+    recovery: 0.15
+    hitOffset: {x: 0.6, y: 0.75}
+    hitSize: {x: 1.1, y: 1.4}
+    knockback: {x: 9, y: 3}
+    stun: 1
+  slam:
+    damage: 40
+    cooldown: 30
+    crouch: 0.15
+    leapVelocity: 13
+    maxAirTime: 0.45
+    slamSpeed: 28
+    radius: 4
+    knockback: {x: 10, y: 6}
+    stun: 0.6
+    recovery: 0.35

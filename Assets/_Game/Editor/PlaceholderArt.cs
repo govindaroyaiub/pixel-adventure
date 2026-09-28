@@ -30,6 +30,23 @@ namespace PixelAdventure.EditorTools
             White = Save("White", Fill(4, 4, Color.white), 4, Center, TextureWrapMode.Clamp);
         }
 
+        /// <summary>Reloads the generated sprites (call after EditorSceneManager.NewScene, which unloads them).</summary>
+        public static void Load()
+        {
+            Sprite L(string name) => AssetDatabase.LoadAssetAtPath<Sprite>($"{Dir}/{name}.png");
+            Sky = L("Sky");
+            MountainsFar = L("MountainsFar");
+            MountainsNear = L("MountainsNear");
+            Dirt = L("Dirt");
+            GrassTop = L("GrassTop");
+            Stone = L("Stone");
+            Dummy = L("Dummy");
+            Circle = L("Circle");
+            Ring = L("Ring");
+            White = L("White");
+            if (Sky == null) GenerateAll();
+        }
+
         /// <summary>Pixel-art import settings for a character sprite sheet (sliced at runtime by SpriteAnimator).</summary>
         public static Texture2D ConfigureSheet(string path)
         {

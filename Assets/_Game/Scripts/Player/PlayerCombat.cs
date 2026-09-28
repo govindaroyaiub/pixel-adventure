@@ -47,6 +47,12 @@ namespace PixelAdventure.Player
             motor = GetComponent<PlayerMotor>();
             health = GetComponent<Health>();
             data = motor.Data;
+            if (data == null || animator == null)
+            {
+                Debug.LogError("PlayerCombat: hero data or animator is missing. Run Pixel Adventure → Build Stage 1-1.", this);
+                enabled = false;
+                return;
+            }
             bashCooldown = new Cooldown(data.bash.cooldown);
             slamCooldown = new Cooldown(data.slam.cooldown);
             health.SetMax(data.maxHp, true);

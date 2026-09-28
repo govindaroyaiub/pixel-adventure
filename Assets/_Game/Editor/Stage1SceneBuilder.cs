@@ -53,11 +53,12 @@ namespace PixelAdventure.EditorTools
 
         public static void CreateScene()
         {
+            // NewScene unloads unreferenced assets, so load everything AFTER creating it.
+            var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             EnsureLayers();
             HeroClassData knight = EnsureKnightAssets();
             var noFriction = EnsureNoFriction();
-
-            var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            PlaceholderArt.Load();
 
             // Camera + backdrop
             CreateCamera(SkyColor);
